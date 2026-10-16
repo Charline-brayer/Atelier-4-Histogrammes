@@ -1,9 +1,8 @@
 #include <stdio.h>
 
 #define NB_VALEURS 3
-#define MAX_LIGNES 15
-
-void afficher_ligne_histov(int t[], int taille, float y);
+#define MAX_LONGUEUR 50
+#define GRADUATION 10   // un repere tous les 10 caracteres
 
 int main()
 {
@@ -19,31 +18,55 @@ int main()
         }
     }
 
-    // Affichage de l'histogramme vertical
-    for (int i = 0; i < MAX_LIGNES; i++)
-    {
-        float y = (float)maximum * (MAX_LIGNES - i) / MAX_LIGNES;
-        afficher_ligne_histov(valeurs, NB_VALEURS, y);
-    }
-    printf("+---------------------------------------\n");
+    // Calcul de l'echelle
+    float echelle = (float)MAX_LONGUEUR / maximum;
 
-    return 0;
-}
-
-// Affiche une ligne : une barre "xxx " pour chaque valeur >= y
-void afficher_ligne_histov(int t[], int taille, float y)
-{
-    printf("| ");
-    for (int k = 0; k < taille; k++)
+    // Barres avec lignes de suivi
+    for (int i = 0; i < NB_VALEURS; i++)
     {
-        if (t[k] >= y)
+        int longueur = (int)(valeurs[i] * echelle);
+
+        printf("| ");
+        for (int j = 0; j < MAX_LONGUEUR; j++)
         {
-            printf("xxx ");
+            if (j < longueur)
+            {
+                printf("x");
+            }
+            else if ((j + 1) % GRADUATION == 0)
+            {
+                printf(".");   // ligne de suivi
+            }
+            else
+            {
+                printf(" ");
+            }
+        }
+        printf(" %d\n", valeurs[i]);
+    }
+
+    // Axe avec reperes
+    printf("+-");
+    for (int j = 0; j < MAX_LONGUEUR; j++)
+    {
+        if ((j + 1) % GRADUATION == 0)
+        {
+            printf("+");
         }
         else
         {
-            printf("    ");
+            printf("-");
         }
     }
     printf("\n");
+
+    // Valeurs de la graduation (alignees sur les reperes)
+    printf("  ");
+    for (int p = GRADUATION; p <= MAX_LONGUEUR; p += GRADUATION)
+    {
+        printf("%10.1f", p / echelle);
+    }
+    printf("\n");
+
+    return 0;
 }
