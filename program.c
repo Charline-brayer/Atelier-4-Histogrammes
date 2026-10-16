@@ -1,7 +1,9 @@
 #include <stdio.h>
 
 #define NB_VALEURS 3
-#define MAX_LONGUEUR 50
+#define MAX_LIGNES 15
+
+void afficher_ligne_histov(int t[], int taille, float y);
 
 int main()
 {
@@ -17,22 +19,31 @@ int main()
         }
     }
 
-    // Calcul de l'echelle
-    float echelle = (float)MAX_LONGUEUR / maximum;
-
-    // Affichage de l'histogramme
-    for (int i = 0; i < NB_VALEURS; i++)
+    // Affichage de l'histogramme vertical
+    for (int i = 0; i < MAX_LIGNES; i++)
     {
-        int longueur = (int)(valeurs[i] * echelle);
-
-        printf("| ");
-        for (int j = 0; j < longueur; j++)
-        {
-            printf("x");
-        }
-        printf(" %d\n", valeurs[i]);
+        float y = (float)maximum * (MAX_LIGNES - i) / MAX_LIGNES;
+        afficher_ligne_histov(valeurs, NB_VALEURS, y);
     }
-    printf("+-------------------------------------------------------\n");
+    printf("+---------------------------------------\n");
 
     return 0;
+}
+
+// Affiche une ligne : une barre "xxx " pour chaque valeur >= y
+void afficher_ligne_histov(int t[], int taille, float y)
+{
+    printf("| ");
+    for (int k = 0; k < taille; k++)
+    {
+        if (t[k] >= y)
+        {
+            printf("xxx ");
+        }
+        else
+        {
+            printf("    ");
+        }
+    }
+    printf("\n");
 }
